@@ -102,7 +102,8 @@ def move():
 def get_encoders():
     return jsonify({
         "left_encoder": left_encoder.value,
-        "right_encoder": right_encoder.value
+        "right_encoder": right_encoder.value,
+        "motion": motion
     })
 #***********************************#
 
