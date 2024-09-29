@@ -12,6 +12,8 @@ app = Flask(__name__)
 class Encoder(object):
     def __init__(self, pin):
         self._value = 0
+        self._last_time = time.time()
+        self.debounce_time = 0.003  # 3ms debounce time
         self.encoder = DigitalInputDevice(pin)
         self.encoder.when_activated = self._increment
         self.encoder.when_deactivated = self._increment
@@ -20,7 +22,10 @@ class Encoder(object):
         self._value = 0
     
     def _increment(self):
-        self._value += 1
+        current_time = time.time()
+        if current_time - self._last_time > self.debounce_time:
+            self._value += 1
+            self._last_time = current_time
         
     @property
     def value(self):
