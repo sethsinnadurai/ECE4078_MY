@@ -37,6 +37,7 @@ def move_robot():
     global use_pid, left_speed, right_speed
     flag_new_pid_cycle = True
     flag_new_straight_cycle = True
+    flag_new_turning_cycle = True
     while True:
         ### if not using pid, just move the wheels as commanded
         if not use_pid:
@@ -51,12 +52,21 @@ def move_robot():
         else:
             if (motion == 'stop') or (motion == 'turning'):
                 pibot.value = (left_speed, right_speed) 
+                if flag_new_turning_cycle:
+                    left_encoder.reset()
+                    right_encoder.reset()
+                    flag_new_turning_cycle = False
+                if (motion == 'stop'):
+                    flag_new_turning_cycle = True
+                    
+                    
                 # if (motion =='stop'):
                 #     left_encoder.reset()
                 #     right_encoder.reset()
                 flag_new_pid_cycle = True 
                 flag_new_straight_cycle = True         
             elif(motion == 'forward') or (motion == 'backward'):
+                flag_new_turning_cycle = False
                 if flag_new_straight_cycle:
                     left_encoder.reset()
                     right_encoder.reset()
