@@ -52,12 +52,13 @@ def move_robot():
         else:
             if (motion == 'stop') or (motion == 'turning'):
                 pibot.value = (left_speed, right_speed) 
-                if flag_new_turning_cycle:
+                if (motion == 'turning') and flag_new_turning_cycle:
                     left_encoder.reset()
                     right_encoder.reset()
                     flag_new_turning_cycle = False
                 if (motion == 'stop'):
                     flag_new_turning_cycle = True
+
                     
                     
                 # if (motion =='stop'):
@@ -66,7 +67,7 @@ def move_robot():
                 flag_new_pid_cycle = True 
                 flag_new_straight_cycle = True         
             elif(motion == 'forward') or (motion == 'backward'):
-                flag_new_turning_cycle = False
+                flag_new_turning_cycle = True
                 if flag_new_straight_cycle:
                     left_encoder.reset()
                     right_encoder.reset()
