@@ -36,6 +36,7 @@ class Encoder(object):
 def move_robot():
     global use_pid, left_speed, right_speed
     flag_new_pid_cycle = True
+    flag_new_straight_cycle = True
     while True:
         ### if not using pid, just move the wheels as commanded
         if not use_pid:
@@ -50,11 +51,16 @@ def move_robot():
         else:
             if (motion == 'stop') or (motion == 'turning'):
                 pibot.value = (left_speed, right_speed) 
-                if (motion =='stop'):
+                # if (motion =='stop'):
+                #     left_encoder.reset()
+                #     right_encoder.reset()
+                flag_new_pid_cycle = True 
+                flag_new_straight_cycle = True         
+            elif(motion == 'forward') or (motion == 'backward'):
+                if flag_new_straight_cycle:
                     left_encoder.reset()
                     right_encoder.reset()
-                flag_new_pid_cycle = True          
-            elif(motion == 'forward') or (motion == 'backward'):
+                    flag_new_straight_cycle = False
                 left_speed, right_speed = abs(left_speed), abs(right_speed)
                 if flag_new_pid_cycle:
                     pid_right = PID(kp, ki, kd, setpoint=left_encoder.value, output_limits=(0,1), starting_output=right_speed)
