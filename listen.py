@@ -13,7 +13,7 @@ class Encoder(object):
     def __init__(self, pin):
         self._value = 0
         self._last_time = time.time()
-        self.debounce_time = 0.003  # 3ms debounce time
+        self.debounce_time = 0.0025  # 3ms debounce time
         self.encoder = DigitalInputDevice(pin)
         self.encoder.when_activated = self._increment
         self.encoder.when_deactivated = self._increment
@@ -51,8 +51,9 @@ def move_robot():
             if (motion == 'stop') or (motion == 'turning'):
                 pibot.value = (left_speed, right_speed) 
                 if (motion =='stop'):
-                    left_encoder.reset()
-                    right_encoder.reset()
+                    continue
+                    # left_encoder.reset()
+                    # right_encoder.reset()
                 flag_new_pid_cycle = True          
             elif(motion == 'forward') or (motion == 'backward'):
                 left_speed, right_speed = abs(left_speed), abs(right_speed)
