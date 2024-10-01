@@ -13,7 +13,7 @@ class Encoder(object):
     def __init__(self, pin):
         self._value = 0
         self._last_time = time.time()
-        self.debounce_time = 0.01  # 3ms debounce time
+        self.debounce_time = 0.0025  # 3ms debounce time
         self.encoder = DigitalInputDevice(pin)
         self.encoder.when_activated = self._increment
         self.encoder.when_deactivated = self._increment
