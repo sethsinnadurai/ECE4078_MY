@@ -1,7 +1,7 @@
 from simple_pid import PID
 from picamera2 import Picamera2
 from flask import Flask, Response, request, jsonify
-from gpiozero import Robot, Motor, DigitalInputDevice
+from gpiozero import Robot, Motor, DigitalInputDevice, Servo
 import io
 import time
 import threading
@@ -133,6 +133,16 @@ def get_encoders():
         "motion": motion
     })
 #***********************************#
+# Function to set the servo angle
+def set_servo_angle(angle):
+    servo_value = angle / 90  # Convert degrees to range -1 to 1
+    servo.value = max(min(servo_value, 1), -1)
+    
+@app.route('/servo')
+def move_servo():
+    angle = float(request.args.get('angle'))  # Get the angle from the client
+    set_servo_angle(angle)
+    return f"Servo set to {angle} degrees"
 
 
 # Constants
@@ -144,9 +154,12 @@ in4 = 24 # may have to change this
 enb = 25
 enc_a = 26
 enc_b = 16
+servo_pin = 20
 
 # Initialize robot and encoders
 pibot = Robot(right=Motor(forward=in1, backward=in2, enable=ena), left=Motor(forward=in3, backward=in4, enable=enb))
+# Initialise Servo
+servo = Servo(servo_pin)
 
 # Initialize PID controllers for wheels
 left_encoder = Encoder(enc_a)
