@@ -148,7 +148,7 @@ def get_encoders():
 # Function to set servo angle using pulse width
 def set_servo_angle(angle):
     # Convert angle to pulse width (500 to 2500 for 0 to 180 degrees)
-    pulsewidth = int(500 + (angle / 180.0) * 2000)
+    pulsewidth = int(angle)
     pi.set_servo_pulsewidth(servo_pin, pulsewidth)
 
 # Flask route to move the servo
@@ -168,7 +168,7 @@ in4 = 24 # may have to change this
 enb = 25
 enc_a = 26
 enc_b = 16
-servo_pin = 20
+servo_pin = 21
 
 # Initialize robot and encoders
 pibot = Robot(right=Motor(forward=in1, backward=in2, enable=ena), left=Motor(forward=in3, backward=in4, enable=enb))
