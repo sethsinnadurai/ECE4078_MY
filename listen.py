@@ -135,8 +135,9 @@ def get_encoders():
 #***********************************#
 # Function to set the servo angle
 def set_servo_angle(angle):
-    servo_value = angle / 90  # Convert degrees to range -1 to 1
-    servo.value = max(min(servo_value, 1), -1)
+    # servo_value = angle / 90  # Convert degrees to range -1 to 1
+    # servo.value = max(min(servo_value, 1), -1)
+    servo.value = angle
     
 @app.route('/servo')
 def move_servo():
