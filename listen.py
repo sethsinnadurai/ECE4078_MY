@@ -5,6 +5,7 @@ from gpiozero import Robot, Motor, DigitalInputDevice, Servo
 import io
 import time
 import threading
+import pigpio
 
 app = Flask(__name__)
 
@@ -133,12 +134,24 @@ def get_encoders():
         "motion": motion
     })
 #***********************************#
-# Function to set the servo angle
-def set_servo_angle(angle):
-    # servo_value = angle / 90  # Convert degrees to range -1 to 1
-    # servo.value = max(min(servo_value, 1), -1)
-    servo.value = angle
+# # Function to set the servo angle
+# def set_servo_angle(angle):
+#     # servo_value = angle / 90  # Convert degrees to range -1 to 1
+#     # servo.value = max(min(servo_value, 1), -1)
+#     servo.value = angle
     
+# @app.route('/servo')
+# def move_servo():
+#     angle = float(request.args.get('angle'))  # Get the angle from the client
+#     set_servo_angle(angle)
+#     return f"Servo set to {angle} degrees"
+# Function to set servo angle using pulse width
+def set_servo_angle(angle):
+    # Convert angle to pulse width (500 to 2500 for 0 to 180 degrees)
+    pulsewidth = int(500 + (angle / 180.0) * 2000)
+    pi.set_servo_pulsewidth(servo_pin, pulsewidth)
+
+# Flask route to move the servo
 @app.route('/servo')
 def move_servo():
     angle = float(request.args.get('angle'))  # Get the angle from the client
@@ -161,6 +174,12 @@ servo_pin = 20
 pibot = Robot(right=Motor(forward=in1, backward=in2, enable=ena), left=Motor(forward=in3, backward=in4, enable=enb))
 # Initialise Servo
 servo = Servo(servo_pin)
+
+# Initialize pigpio for servo control
+pi = pigpio.pi()
+
+# Set PWM frequency for the servo (50 Hz for most servos)
+pi.set_PWM_frequency(servo_pin, 50)
 
 # Initialize PID controllers for wheels
 left_encoder = Encoder(enc_a)
@@ -192,4 +211,5 @@ try:
 except KeyboardInterrupt:
     pibot.stop()
     picam2.stop()
+    pi.set_servo_pulsewidth(servo_pin, 0)
     print("Program interrupted by user.")
