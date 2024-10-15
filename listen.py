@@ -176,7 +176,7 @@ pibot = Robot(right=Motor(forward=in1, backward=in2, enable=ena), left=Motor(for
 # servo = Servo(servo_pin)
 
 # Initialize pigpio for servo control
-pi = pigpio.pi()
+# pi = pigpio.pi()
 
 # Set PWM frequency for the servo (50 Hz for most servos)
 # pi.set_PWM_frequency(servo_pin, 50)
